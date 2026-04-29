@@ -14,10 +14,9 @@
 - ubus 接口：
   - `ubus call drcom status`
   - `ubus call drcom reconnect`
-  - `ubus call drcom reload '{"force":true}'`
 - LuCI（JS）页面：配置 + 状态 + 操作
   - 配置项：启用 / 账号 / 密码 / 接口(选择) / IP(必填) / MAC(必填) / 网关(必填)
-  - 4 个按钮集中在同一块“操作”区域：一键配置 / 一键恢复 / 重连 / 重载配置
+  - 3 个按钮集中在同一块“操作”区域：一键配置 / 一键恢复 / 重连
   - 页面文案已直接中文化（不依赖额外翻译包）
 
 ### 一键配置做了什么
