@@ -11,7 +11,7 @@
     "write": {
       "uci": [ "drcom", "network", "dhcp" ],
       "ubus": {
-        "drcom": [ "reconnect", "reload" ],
+        "drcom": [ "reconnect" ],
         "network": [ "reload" ],
         "luci": [ "setInitAction" ]
       }
