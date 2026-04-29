@@ -1,10 +1,10 @@
-# luci-app-jludrcom
+# jluDrcom
 
-吉林大学校园网 DrCOM 客户端 OpenWrt/ImmortalWrt 插件。
+吉林大学校园网 DrCOM 客户端 OpenWrt/ImmortalWrt 插件集合仓库。
 
-本仓库包含两部分：
+本仓库包含两个 OpenWrt 包目录：
 
-- `luci-app-jludrcom`：LuCI 管理界面（纯 JS 页面，不写 Lua）。
+- `luci-app-jludrcom/`：LuCI 管理界面（纯 JS 页面，不写 Lua）。
 - `drcomd/`：后端 C 守护进程（procd 管理 + ubus 状态/控制 + UCI 配置）。
 
 ## 功能
@@ -55,10 +55,10 @@
 
 ### 在 OpenWrt/ImmortalWrt 源码树中使用
 
-将本仓库内容复制到 buildroot：
+将本仓库两个目录复制到 buildroot：
 
-- LuCI 包（仓库根目录内容）放到：`package/luci-app-jludrcom/`
-- 后端包（本仓库 `drcomd/`）放到：`package/drcomd/`
+- LuCI 包：`luci-app-jludrcom/` → `package/luci-app-jludrcom/`
+- 后端包：`drcomd/` → `package/drcomd/`
 
 然后：
 ```sh
