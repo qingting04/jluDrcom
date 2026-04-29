@@ -1,0 +1,13 @@
+{
+  "admin/services/jludrcom": {
+    "title": "吉林大学 DrCOM",
+    "order": 60,
+    "action": {
+      "type": "view",
+      "path": "jludrcom"
+    },
+    "depends": {
+      "acl": [ "luci-app-jludrcom" ]
+    }
+  }
+}

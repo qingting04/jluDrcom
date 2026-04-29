@@ -1,0 +1,6 @@
+*.ipk
+*.o
+*.a
+*.so
+*.tmp
+.DS_Store
