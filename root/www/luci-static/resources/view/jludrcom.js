@@ -20,13 +20,6 @@ var callReconnect = rpc.declare({
 	expect: { '': {} }
 });
 
-var callReload = rpc.declare({
-	object: 'drcom',
-	method: 'reload',
-	params: [ 'force' ],
-	expect: { '': {} }
-});
-
 var callNetworkReload = rpc.declare({
 	object: 'network',
 	method: 'reload',
@@ -302,18 +295,7 @@ return view.extend({
 								btn.disabled = false;
 							});
 						})
-					}, [ _('重连') ]),
-					' ',
-					E('button', {
-						'class': 'cbi-button cbi-button-action',
-						'click': ui.createHandlerFn(this, function(ev) {
-							var btn = ev.currentTarget;
-							btn.disabled = true;
-							return callReload(true).catch(function() {}).then(function() {
-								btn.disabled = false;
-							});
-						})
-					}, [ _('重载配置') ])
+					}, [ _('重连') ])
 				]),
 				E('p', { 'class': 'cbi-section-descr' }, [ _('一键配置会将所选接口改为静态地址并伪装 MAC，写入网关与 DNS（10.10.10.10、202.98.18.3），并关闭 dnsmasq 的 DNS 重绑定保护；执行前会自动备份，便于一键恢复。') ])
 			]);
