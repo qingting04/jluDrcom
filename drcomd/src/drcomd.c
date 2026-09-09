@@ -126,6 +126,8 @@ static int resolve_server(struct drcom_ctx *c) {
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
 
+	/* Destination is the DrCOM server port (fixed 61440); the configurable
+	 * `client_port` is the local source port bound in open_socket(). */
 	snprintf(portstr, sizeof(portstr), "%d", DRCOM_DEFAULT_PORT);
 	int r = getaddrinfo(c->server, portstr, &hints, &res);
 	if (r != 0)
@@ -189,9 +191,11 @@ static void checksum2(const uint8_t *buf, size_t len, uint8_t out[4]) {
 	out[3] = (uint8_t)(r >> 24);
 }
 
-static void ror3(const uint8_t md5a[16], const uint8_t *pass, size_t pass_len, uint8_t *out) {
+static void rol3(const uint8_t md5a[16], const uint8_t *pass, size_t pass_len, uint8_t *out) {
+	/* md5a is 16 bytes; for passwords longer than 16 the key cycles (i & 15),
+	 * avoiding an out-of-bounds read into the adjacent struct fields. */
 	for (size_t i = 0; i < pass_len; i++) {
-		uint8_t x = (uint8_t)(md5a[i] ^ pass[i]);
+		uint8_t x = (uint8_t)(md5a[i & 15] ^ pass[i]);
 		out[i] = (uint8_t)(((x << 3) & 0xff) | (x >> 5));
 	}
 }
@@ -208,8 +212,6 @@ static ssize_t build_login_packet(struct drcom_ctx *c, uint8_t *out, size_t out_
 	const uint8_t adapter_num = 0x03;
 	const uint8_t ip_dog = 0x01;
 	const uint8_t auth_ver[2] = { 0x68, 0x00 };
-	const uint8_t keepalive_ver[2] = { 0xdc, 0x02 };
-	(void)keepalive_ver;
 
 	size_t user_len = strnlen(c->username, 36);
 	size_t pass_len = strnlen(c->password, 32);
@@ -296,7 +298,7 @@ static ssize_t build_login_packet(struct drcom_ctx *c, uint8_t *out, size_t out_
 	memcpy(out + 310, auth_ver, 2);
 	out[313] = (uint8_t)pass_len;
 
-	ror3(c->md5a, (const uint8_t *)c->password, pass_len, out + 314);
+	rol3(c->md5a, (const uint8_t *)c->password, pass_len, out + 314);
 	out[314 + pass_len] = 0x02;
 	out[315 + pass_len] = 0x0c;
 
@@ -676,7 +678,7 @@ static int ubus_status(struct ubus_context *ubus, struct ubus_object *obj,
 	blobmsg_add_u32(&bb, "last_tx", (uint32_t)c->last_tx);
 	blobmsg_add_string(&bb, "last_error", c->last_err);
 
-	ubus_send_reply(g.ubus, req, bb.head);
+	ubus_send_reply(ubus, req, bb.head);
 	return 0;
 }
 

@@ -291,7 +291,9 @@ return view.extend({
 						'click': ui.createHandlerFn(this, function(ev) {
 							var btn = ev.currentTarget;
 							btn.disabled = true;
-							return callReconnect().catch(function() {}).then(function() {
+							return callReconnect().catch(function(e) {
+								ui.addNotification(null, E('p', [ _('重连失败：%s').format(String(e)) ]), 'warning');
+							}).then(function() {
 								btn.disabled = false;
 							});
 						})
